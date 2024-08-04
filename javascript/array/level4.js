@@ -1,7 +1,7 @@
 const arr = ['ram','shyam','hari']
 
 //Q1
-//remove hari
+//remove shyam
 // expected output 
 // ['ram', 'hari']
 //syntax
