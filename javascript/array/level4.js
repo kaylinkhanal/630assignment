@@ -47,10 +47,10 @@ const cartItems=[
     {id: 1, product:"hawkins", price:30, quantity:1},
     {id: 1, product:"baltra", price:10, quantity:3},
     ]
-// let totalPrice = 0
-//cartItems.forEach((item)=>{
-    // totalPrice= totalPrice + item.price
-// })
-//console.log(totalPrice)
+let totalPrice = 0
+cartItems.forEach((item)=>{
+    totalPrice= totalPrice + item.price * item.quantity
+})
+console.log(totalPrice)
 
     //60
