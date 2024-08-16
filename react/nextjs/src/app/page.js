@@ -1,36 +1,30 @@
 'use client'
-import { Button, Card, CardBody, DatePicker, Image, Input } from "@nextui-org/react"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
-import Register from "./register/page"
+import { Button } from '@nextui-org/react';
+import { useState } from "react";
 
-const Login = ()=> {
-  const router = useRouter()
-  const handleRegister = ()=> {
-      router.push('/home')
+import React from 'react'
+
+const Home = () => {
+  let [num, setNum] = useState(10);
+  const handleChange = (operation)=>{
+    alert("hi")
+    if(operation=== 'inc') {
+      setNum(num + 1)
+    }else{
+      setNum(num - 1)
+    }
   }
-  return (
-    <div className="flex justify-center items-center">
-    <Card className="flex w-96 p-4 m-12">
-          <Image
-      width={300}
-      alt="NextUI hero Image"
-      src="logo.png"
-    />
-      <CardBody className="flex gap-2">
-    <Input placeholder="Enter Email"/>
-    <Input placeholder="enter password"/>
-    <Button onClick={handleRegister} className="bg-blue-400 text-white">Login</Button>
-    <p>Don't have an account? <Link href="/register">Register</Link>  instead</p>
-    <Link href="/forget-password">Forget Password</Link>
-    </CardBody>
-    </Card>
-    <Register/>
-    </div>
 
+  return (
+    <div>
+      <Button onClick={()=>handleChange('dec')}>-</Button>
+      {num}
+      <Button onClick={()=>handleChange('inc')}>+</Button>
+      </div>
   )
 }
 
-//JSX
 
-export default Login
+
+
+export default Home

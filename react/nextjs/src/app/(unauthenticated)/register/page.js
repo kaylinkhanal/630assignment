@@ -2,7 +2,8 @@
 import React from 'react';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
-import { Card, CardBody, Image, Input } from '@nextui-org/react';
+import { Button, Card, CardBody, DatePicker, Image, Input } from '@nextui-org/react';
+import Link from 'next/link';
 
 const SignupSchema = Yup.object().shape({
   firstName: Yup.string()
@@ -14,11 +15,20 @@ const SignupSchema = Yup.object().shape({
     .max(50, 'Too Long!')
     .required('Required'),
   email: Yup.string().email('Invalid email').required('Required'),
+  password: Yup.string()
+    .min(8, 'Password must be 8 characters long')
+    .required('Required'),
+    phoneNumber: Yup.number()
+    .min(10, 'Phone Number must be 10 characters long')
+    .max(10, 'Phone Number must be 10 characters long'),
+  confirmPassword: Yup
+    .string()
+    .oneOf([Yup.ref('password'), null], 'Confirm Password must match Password'),
 });
 
 const Register = () => (
   <div>
-    <h1>Signup</h1>
+
     <Formik
       initialValues={{
         firstName: '',
@@ -35,22 +45,31 @@ const Register = () => (
             <div className="flex justify-center items-center">
             <Card className="flex w-96 p-4 m-12">
             <CardBody className="flex gap-2">
-        <Form>
+        <Form className='flex flex-col gap-4'>
+        <h1 className='text-xl font-mono font-bold text-[#3C5C7D]'>Signup</h1>
         <Image
           width={300}
           alt="NextUI hero Image"
           src="logo.png"
         />
-          <Input name="firstName"  onChange={handleChange} placeholder="Enter Full Name"/>
+          <Input name="firstName"    className={errors.firstName ? ' border border-red-600 rounded-md': null} onChange={handleChange} placeholder="Enter Full Name"/>
           {errors.firstName && touched.firstName ? (
-            <div>{errors.firstName}</div>
+            <div className='text-red-900 text-sm'>{errors.firstName}</div>
           ) : null}
        
           <Input name="email" type="email" onChange={handleChange}  placeholder='enter email'/>
           {errors.email && touched.email ? <div>{errors.email}</div> : null}
-        
-          <button type="submit">Submit</button>
+          <DatePicker label="Birth date"/>
+
+
+          <Input name="password" type="password" onChange={handleChange}  placeholder='Enter Password'/>
+          {errors.password && touched.password ? <div>{errors.password}</div> : null}
+          <Input name="confirmPassword" type="password" onChange={handleChange}  placeholder='Confirm Password'/>
+          {errors.confirmPassword && touched.confirmPassword ? <div>{errors.confirmPassword}</div> : null}
+
+          <Button className='bg-[#3C5C7D] text-white' type="submit">Register</Button>
         </Form>
+       <p> Already have an account? <Link href={"/"}>Sign In</Link> Instead</p>
         </CardBody>
         </Card>
         </div>
