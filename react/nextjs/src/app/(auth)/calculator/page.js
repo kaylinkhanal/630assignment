@@ -23,20 +23,39 @@ const Calculator = () => {
         {key: '+', className: 'bg-orange-300'}],
         [{key: '0', className: 'bg-gray-300'},
         {key: '.', className: 'bg-gray-300'},
-        {key: '=', className: 'bg-orange-300'}]
+        {key: '=', className: 'bg-orange-300'},
+        {key: '<-', className: 'bg-orange-300'}
+      ]
     ]
+    const arthimeticKeys = ['/','*']
 
     const handleChange = (key)=>{
+        if(arthimeticKeys.includes(output.toString().slice(-1)) && arthimeticKeys.includes(key)){
+        const result =  output.slice(0,output.length-1)+ key
+        setOutput(result)
+        return;
+        }else if(output.toString().slice(-1) == key && isNaN(Number(key)) ){
+          return;
+        }
       switch(key){
         case '+', '-','*','/':
-            setOutput(output+ key)
+            setOutput(output.toString()+ key)
             break;
         case 'AC':
             setOutput('')
             break;
+        case '=':
+          setOutput(eval(output))
+          break;
         case '+/-':
             setOutput(eval(output*-1))
             break;
+        case '%':
+          setOutput(eval(output/100))
+          break;
+        case '<-':
+          setOutput(output.toString().slice(0,-1))
+          break;
         default:
             setOutput(output+ key)
             break;
