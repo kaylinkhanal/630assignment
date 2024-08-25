@@ -30,6 +30,7 @@ const Calculator = () => {
     const arthimeticKeys = ['/','*']
 
     const handleChange = (key)=>{
+      //
         if(arthimeticKeys.includes(output.toString().slice(-1)) && arthimeticKeys.includes(key)){
         const result =  output.slice(0,output.length-1)+ key
         setOutput(result)
