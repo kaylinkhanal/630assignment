@@ -6,8 +6,10 @@ import { FaRegHandScissors } from "react-icons/fa";
 
 import Confetti from 'react-confetti'
 import { Button } from '@nextui-org/react';
+import { useSelector } from 'react-redux';
 
 const RockPaper = () => {
+    const count = useSelector((state) => state.counter.value)
     const [userChoice, setUserChoice] = useState(null)
     const [newRound, setNewRound] = useState(1)
     const [randomNum ,setRandomNum] = useState(0)
@@ -31,6 +33,7 @@ const RockPaper = () => {
   return ( 
     <div>
         Round Number: {newRound}
+     
         <div className='flex gap-6  m-4 p-4 items-center'>
             <div className='bg-pink-100 shadow-lg  w-[50%] h-72'>Computer
             { userChoice && choices[randomNum].icon}
