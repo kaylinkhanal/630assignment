@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
+
 export const boxSlice = createSlice({
   name: 'box',
   initialState: {
@@ -10,6 +11,7 @@ export const boxSlice = createSlice({
     padding:20,
     margin:20,
     marginLeft: 50,
+    marginTop: 50,
     isCircle: false
   },
   reducers: {
@@ -20,21 +22,32 @@ export const boxSlice = createSlice({
         state.height=state.width
         state.borderRadius= '50%'
       }
+   
     },
     increaseWidth: (state, action) => {
       state.width++
+
    },
    changeBackgroundColor: (state, action) => {
     state.backgroundColor = action.payload
+
  },
  moveRight: (state, action) => {
   state.marginLeft= state.marginLeft+20
 },
- 
+moveLeft: (state, action) => {
+  state.marginLeft= state.marginLeft-20
+},
+moveBottom: (state, action) => {
+  state.marginTop =  state.marginTop +20
+},
+moveUp: (state, action) => {
+  state.marginTop =  state.marginTop -20
+},
   }
 })
 
 
-export const { changeShape,increaseWidth,changeBackgroundColor, moveRight } = boxSlice.actions
+export const { changeShape,moveUp,increaseWidth,moveBottom,changeBackgroundColor, moveRight,moveLeft } = boxSlice.actions
 
 export default boxSlice.reducer
