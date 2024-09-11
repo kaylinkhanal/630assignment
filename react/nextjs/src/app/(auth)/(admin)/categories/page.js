@@ -22,6 +22,7 @@ const Categories = () => {
       ))
     } 
     const handleSubmit = async(values, id)=>{
+      debugger;
         if(id) {
             const {data}= await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/categories/${id}`,values)
             if(data) {
@@ -44,7 +45,7 @@ const Categories = () => {
   return (
     <div className=''>
         <CategoryForm type="Add" handleSubmit={handleSubmit}/>
-        <CategoriesList handleDelete={handleDelete} categories={categories}/>
+        <CategoriesList handleDelete={handleDelete} handleSubmit={handleSubmit} categories={categories}/>
     </div>
   )
 }

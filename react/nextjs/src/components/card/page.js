@@ -4,6 +4,7 @@ import { Image } from '@nextui-org/react'
 import React from 'react'
 import { FaEdit, FaTrash } from 'react-icons/fa'
 const Card = (props) => {
+  debugger;
   return (
     <div className='p-4 bg-pink-50 shadow-md text-2xl font-semibold font-mono justify-center content-center'>
     {props.item.name || props.item.title}

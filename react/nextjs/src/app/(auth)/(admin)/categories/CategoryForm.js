@@ -25,7 +25,7 @@ const FormInput = (props) => (
       enableReinitialize={true}
       validationSchema={FormSchema}
       onSubmit={values => {
-        props.handleSubmit(values, props.item.id)
+        props.handleSubmit(values, props?.item?.id)
       }}
     >
       {({ errors, touched, handleChange,values }) => (
@@ -55,6 +55,8 @@ const FormInput = (props) => (
 
 
 export default function CategoryForm(props) {
+
+  debugger;
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
   return (
     <>
