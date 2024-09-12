@@ -4,6 +4,7 @@ const columns = [
   {name: "NAME", uid: "title", sortable: true},
   {name: "PRICE (NPR)", uid: "price", sortable: true},
   {name: "CREATED AT", uid: "creationAt"},
+  {name: "ACTIONS", uid: "actions"},
 ];
 
 const statusOptions = [

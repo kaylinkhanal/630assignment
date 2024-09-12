@@ -19,6 +19,7 @@ import {
 
 import {columns,  statusOptions} from "./data";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const statusColorMap = {
   active: "success",
@@ -26,7 +27,7 @@ const statusColorMap = {
   vacation: "warning",
 };
 
-const INITIAL_VISIBLE_COLUMNS = ["title", "price", "creationAt"];
+const INITIAL_VISIBLE_COLUMNS = ["title", "price", "creationAt","actions"];
 
 export default function CustomTable() {
   const [products,setproducts] = React.useState([])
@@ -35,13 +36,13 @@ export default function CustomTable() {
   const [visibleColumns, setVisibleColumns] = React.useState(new Set(INITIAL_VISIBLE_COLUMNS));
   const [statusFilter, setStatusFilter] = React.useState("all");
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const fetchData = async(rowCount)=> {
-    const {data} = await axios.get('https://api.escuelajs.co/api/v1/products?offset=0&limit='+rowCount||rowsPerPage)
+  const fetchData = async(rowCount, page)=> {
+    const {data} = await axios.get('https://api.escuelajs.co/api/v1/products?offset='+page+'&limit='+rowCount)
     setproducts(data)
 }
 
 useEffect(()=>{
-  fetchData()
+  fetchData(5, 0)
 },[])
   const [sortDescriptor, setSortDescriptor] = React.useState({
     column: "age",
@@ -99,10 +100,17 @@ useEffect(()=>{
    const {data} =await axios.get('https://api.escuelajs.co/api/v1/products/?title='+value)
    setproducts(data)
   }
+
+  const handleDelete =async(item)=> {
+
+    const {data}= await axios.delete(process.env.NEXT_PUBLIC_API_URL + '/products/'+item.id)
+    fetchData(rowsPerPage, page*rowsPerPage-rowsPerPage )
+    if(data) toast.success("deleted successfully")
+  } 
   const renderCell = React.useCallback((product, columnKey) => {
     const cellValue = product[columnKey];
-
     switch (columnKey) {
+    
       case "name":
         return (
           <product
@@ -145,8 +153,8 @@ useEffect(()=>{
               </DropdownTrigger>
               <DropdownMenu>
                 <DropdownItem>View</DropdownItem>
-                <DropdownItem>Edit</DropdownItem>
-                <DropdownItem>Delete</DropdownItem>
+                <DropdownItem key="edit">Edit</DropdownItem>
+                <DropdownItem key="delete" onPress={()=>handleDelete(product)} >Delete</DropdownItem>
               </DropdownMenu>
             </Dropdown>
           </div>
@@ -158,10 +166,15 @@ useEffect(()=>{
 
   const onRowsPerPageChange = React.useCallback((e) => {
     setRowsPerPage(Number(e.target.value));
-    fetchData(e.target.value)
-    setPage(1);
+    fetchData(e.target.value, page*rowsPerPage-rowsPerPage)
+    setPage(1, page);
   }, []);
 
+
+
+  const handlePagination = (page)=>{
+    fetchData(rowsPerPage, page*rowsPerPage-rowsPerPage )
+  }
 
 
 
@@ -232,6 +245,13 @@ useEffect(()=>{
                 ))}
               </DropdownMenu>
             </Dropdown>
+            
+            {selectedKeys && <Button
+              className="bg-foreground text-background"
+              size="sm"
+            >
+              Delete All
+            </Button>}
             <Button
               className="bg-foreground text-background"
               size="sm"
@@ -241,7 +261,7 @@ useEffect(()=>{
           </div>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-default-400 text-small">Total {products.length} products</span>
+          <span className="text-default-400 text-small">Total {200} products</span>
           <label className="flex items-center text-default-400 text-small">
             Rows per page:
             <select
@@ -277,14 +297,14 @@ useEffect(()=>{
           color="default"
           isDisabled={hasSearchFilter}
           page={page}
-          total={pages}
+          total={40}
           variant="light"
-          onChange={setPage}
+          onChange={handlePagination}
         />
         <span className="text-small text-default-400">
           {selectedKeys === "all"
             ? "All items selected"
-            : `${selectedKeys.size} of ${items.length} selected`}
+            : `${selectedKeys.size} of ${200} selected`}
         </span>
       </div>
     );
