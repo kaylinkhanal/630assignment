@@ -6,6 +6,7 @@ import * as Yup from 'yup';
 import Link from 'next/link';
 import axios from "axios";
 import toast from "react-hot-toast";
+import { FaEdit } from "react-icons/fa";
 
 const FormSchema = Yup.object().shape({
   name: Yup.string()
@@ -60,7 +61,7 @@ export default function CategoryForm(props) {
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
   return (
     <>
-      <Button onPress={onOpen}>{props.type} Categories</Button>
+      <Button onPress={onOpen}>{props.type == 'Edit' ? <FaEdit/> : "Add Category"} </Button>
       <Modal className="h-[50%]" isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
