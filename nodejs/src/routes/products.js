@@ -1,15 +1,8 @@
 
 const {Router} = require('express')
-const mongoose = require('mongoose');
+const Product = require('../models/product')
 
 
-const Product = mongoose.model('Product', {
-      productName: String,
-      productPrice: Number,
-      description: String,
-   });
-
-   
 
 const ProductRoute = Router()
 

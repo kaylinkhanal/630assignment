@@ -1,24 +1,11 @@
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const {Router} = require('express')
-const mongoose = require('mongoose');
+
 const jwt = require('jsonwebtoken');
+const User = require('../models/user');
 
 
-const User = mongoose.model('User', {
-      fullName: String,
-      email: String,
-      gender: {
-        type: String,
-        enum : ['Male', 'Female', 'Other'],
-        default: 'Male'
-      },
-      dateOfBirth: String,
-      password: String,
-      phoneNumber: String
-   });
-
-   
 
 const UserRoute = Router()
 
