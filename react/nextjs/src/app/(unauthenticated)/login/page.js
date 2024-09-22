@@ -7,9 +7,11 @@ import Link from 'next/link';
 import axios from 'axios';
 import NavBar from '@/app/navbar';
 import { useSelector } from 'react-redux';
+import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 const SignupSchema = Yup.object().shape({
-  username: Yup.string()
+  email: Yup.string()
     .min(2, 'Too Short!')
     .max(50, 'Too Long!')
     .required('Required'),
@@ -18,28 +20,37 @@ const SignupSchema = Yup.object().shape({
 });
 
 const Register = () => {
+  const router = useRouter()
   const inputRef = useRef(null)
   const {userPageId} = useSelector(state=>state.user)
 
   const handleLogin = async(values)=>{
-   const {data}=await axios.post('https://fakestoreapi.com/auth/login',values )
+    try{
+      const {data}=await axios.post(process.env.NEXT_PUBLIC_API_URL+'/login',values )
+      if(data) router.push('/dashboard')
+    }catch(err){
+      toast.error(err?.response?.data?.msg)
+    }
   }
+
+
+
+
   useEffect(()=>{
     if(userPageId == 'input') inputRef?.current?.scrollIntoView()
   },[userPageId])
 
   return(
   <div>
-<NavBar/>
+{/* <NavBar/> */}
     <Formik
       initialValues={{
-        username: '',
+        email: '',
         password: '',
       }}
       validationSchema={SignupSchema}
       onSubmit={values => {
-        debugger;
-        inputRef
+
         handleLogin(values)
       }}
     >
@@ -54,24 +65,24 @@ const Register = () => {
           alt="NextUI hero Image"
           src="logo.png"
         />
-          <Input name="username"   className={errors.username ? ' border border-red-600 rounded-md': null} onChange={handleChange} placeholder="Enter User Name"/>
-          {errors.username && touched.username ? (
-            <div className='text-red-900 text-sm'>{errors.username}</div>
+          <Input name="email"   className={errors.email ? ' border border-red-600 rounded-md': null} onChange={handleChange} placeholder="Enter User Name"/>
+          {errors.email && touched.email ? (
+            <div className='text-red-900 text-sm'>{errors.email}</div>
           ) : null}
           <Input name="password"  type="password" onChange={handleChange}  placeholder='Enter Password'/>
           {errors.password && touched.password ? <div>{errors.password}</div> : null}
-          <Button className='bg-[#3C5C7D] text-white' type="submit">Register</Button>
+          <Button className='bg-[#3C5C7D] text-white' type="submit">Login</Button>
         </Form>
-       <p> Already have an account? <Link href={"/"}>Sign In</Link> Instead</p>
+       <p> Already have an account? <Link href={"/register"}>Sign Up</Link> Instead</p>
         </CardBody>
         </Card>
         </div>
       )}
     </Formik>
-    <div className='h-[100vh]'>
+    {/* <div className='h-[100vh]'>
 fsdafsad
     </div>
-    <input ref={inputRef}  placeholder='hello'/>
+    <input ref={inputRef}  placeholder='hello'/> */}
   </div>
 )
 }

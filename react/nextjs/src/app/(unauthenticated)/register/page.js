@@ -4,13 +4,12 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { Button, Card, CardBody, DatePicker, Image, Input } from '@nextui-org/react';
 import Link from 'next/link';
+import axios from 'axios';
+import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 const SignupSchema = Yup.object().shape({
-  firstName: Yup.string()
-    .min(2, 'Too Short!')
-    .max(50, 'Too Long!')
-    .required('Required'),
-  lastName: Yup.string()
+  fullName: Yup.string()
     .min(2, 'Too Short!')
     .max(50, 'Too Long!')
     .required('Required'),
@@ -18,27 +17,45 @@ const SignupSchema = Yup.object().shape({
   password: Yup.string()
     .min(8, 'Password must be 8 characters long')
     .required('Required'),
-    phoneNumber: Yup.number()
-    .min(10, 'Phone Number must be 10 characters long')
-    .max(10, 'Phone Number must be 10 characters long'),
   confirmPassword: Yup
     .string()
     .oneOf([Yup.ref('password'), null], 'Confirm Password must match Password'),
 });
 
-const Register = () => (
+
+
+const Register = () =>{ 
+  const router = useRouter()
+
+const handleSave= async (values)=>{
+  try{
+    const {data}  = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/register`,values)
+    toast.success(data?.msg)
+    if(data) {
+      router.push('/login')
+    }
+  }catch(err){
+    toast.error(err?.response?.data?.msg)
+  }
+
+}
+  return (
   <div>
 
     <Formik
       initialValues={{
-        firstName: '',
-        lastName: '',
+        fullName: '',
         email: '',
+        phoneNumber: null,
+        gender: 'Male',
+        dateOfBirth: '',
+        password:'',
+        confirmPassword:''
+
       }}
       validationSchema={SignupSchema}
       onSubmit={values => {
-        // same shape as initial values
-        console.log(values);
+        handleSave(values)
       }}
     >
       {({ errors, touched, handleChange }) => (
@@ -52,13 +69,18 @@ const Register = () => (
           alt="NextUI hero Image"
           src="logo.png"
         />
-          <Input name="firstName"    className={errors.firstName ? ' border border-red-600 rounded-md': null} onChange={handleChange} placeholder="Enter Full Name"/>
-          {errors.firstName && touched.firstName ? (
-            <div className='text-red-900 text-sm'>{errors.firstName}</div>
+          <Input name="fullName"    className={errors.fullName ? ' border border-red-600 rounded-md': null} onChange={handleChange} placeholder="Enter Full Name"/>
+          {errors.fullName && touched.fullName ? (
+            <div className='text-red-900 text-sm'>{errors.fullName}</div>
           ) : null}
        
           <Input name="email" type="email" onChange={handleChange}  placeholder='enter email'/>
           {errors.email && touched.email ? <div>{errors.email}</div> : null}
+
+
+          <Input name="phoneNumber" onChange={handleChange}  placeholder='enter phoneNumber'/>
+          {errors.phoneNumber && touched.phoneNumber ? <div>{errors.phoneNumber}</div> : null}
+         
           <DatePicker label="Birth date"/>
 
 
@@ -69,14 +91,14 @@ const Register = () => (
 
           <Button className='bg-[#3C5C7D] text-white' type="submit">Register</Button>
         </Form>
-       <p> Already have an account? <Link href={"/"}>Sign In</Link> Instead</p>
+       <p> Already have an account? <Link href={"/login"}>Sign In</Link> Instead</p>
         </CardBody>
         </Card>
         </div>
       )}
     </Formik>
   </div>
-);
+)};
 
 
 export default Register

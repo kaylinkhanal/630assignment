@@ -1,10 +1,16 @@
 const express = require('express') //commonjs
+const app = express()
 const UserRoute = require('./routes/users')
 const ProductRoute = require('./routes/products')
+const cors = require('cors')
+const connection = require('./db/connection')
 
-const app = express()
+connection()
+
 const port = 8080
+
 app.use(express.json())
+app.use(cors())
 app.use(UserRoute)
 app.use(ProductRoute)
 

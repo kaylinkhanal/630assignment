@@ -2,7 +2,6 @@
 import SideBar from '@/components/sidebar/page'
 import { Avatar, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@nextui-org/react'
 import React from 'react'
-import { Toaster } from 'react-hot-toast'
 
 const AdminLayout = ({children}) => {
   return (
@@ -23,10 +22,7 @@ const AdminLayout = ({children}) => {
       </DropdownMenu>
     </Dropdown>
 
-        <Toaster
-            position="top-center"
-            reverseOrder={false}
-            />
+       
         {children}
         </div>
        

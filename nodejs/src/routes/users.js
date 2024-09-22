@@ -3,7 +3,7 @@ const saltRounds = 10;
 const {Router} = require('express')
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
-mongoose.connect('mongodb://127.0.0.1:27017/samajikDb');
+
 
 const User = mongoose.model('User', {
       fullName: String,
@@ -22,47 +22,34 @@ const User = mongoose.model('User', {
 
 const UserRoute = Router()
 
-UserRoute.post('/register',async (req, res) => {
+
+UserRoute.post('/register', async (req, res) => {
     //step 1: check if email is taken
     const emailExists = await User.exists({email: req.body.email})
     const phoneExists = await User.exists({phoneNumber: req.body.phoneNumber})
     if(emailExists || phoneExists) {
-      return res.send({msg: 'Email/Phone already taken'})
+      return res.status(403).send({msg: 'Email/Phone already taken'})
     }
     //step 2: generate hash password 
     req.body.password = await bcrypt.hash(req.body.password, saltRounds);
     //step 3: create new document in the User collection
     User.create(req.body)
-    res.send("user created!!")
+    res.send({msg:"user created!!"})
   })
 
   UserRoute.post('/login',async (req, res) => {
-    
-   //step1: email exists
    const user = await User.findOne({email: req.body.email})
    if(!user){
-    return res.send('Invalid email!')
+    return res.status(401).send({msg: 'Invalid email!'})
    }
    const isMatched = await bcrypt.compare(req.body.password, user.password);
    if(isMatched){
     const  token = jwt.sign({ email: req.body.email }, 'shhhhh');
     res.send({user,token,isLoggedIn: true})
    }else{
-    res.send({msg: 'incorrect password'})
+    res.status(401).send({msg: 'incorrect password'})
    }
-      //yes: {
-          // Step2: password compare (decrypt and check)
-                //yes: {
-                    // Step3: Generate JWT token for the USER
-                    //Step4: send back userdetails, jwt, isLoggedIn: true
-                    // const  token = jwt.sign({ email: req.body.email }, 'shhhhh');
-                   
-                // } 
-                //no: {
-                    // send msg: Password didn't match
-                // }
-      // }
-   //step2: 
+      
   })
 
 UserRoute.get('/users', async (req, res) => {
